@@ -53,6 +53,19 @@ func GetUsers(pageSize int, pageNum int) []User {
 	return users
 }
 
+//编辑用户即是更新操作信息，只限定除密码操作外
+func EditUser(id int, data *User) int { //这里用map方式，详细参见gorm更新操作
+	var user User
+	var maps = make(map[string]interface{})
+	maps["username"] = data.Username
+	maps["role"] = data.Role
+	err = db.Model(user).Where("id=?", id).Updates(maps).Error
+	if err != nil {
+		return errmsg.ERROR
+	}
+	return errmsg.SUCCSE
+}
+
 //删除用户
 func DeleteUser(id int) int {
 	var user User
